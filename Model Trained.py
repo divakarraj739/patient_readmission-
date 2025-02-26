@@ -1,27 +1,24 @@
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-import os
 
 # Define the directory where the model will be saved
-SAVE_DIR = r"C:\Users\kisho\OneDrive\Desktop\patient"
+SAVE_DIR = "model_files"
 os.makedirs(SAVE_DIR, exist_ok=True)  # Create the directory if it doesn't exist
 
-# Load dataset
-df = pd.read_csv(r"C:\Users\kisho\OneDrive\Desktop\hospital_readmissions.csv")
+# Load dataset (Ensure the file is in the project directory)
+df = pd.read_csv("hospital_readmissions.csv")
 
 # Convert 'readmitted' column to binary values
 df['readmitted'] = df['readmitted'].apply(lambda x: 1 if str(x).strip().upper() == "YES" else 0)
 
 # Convert numeric-like object columns to integers
 numeric_columns = ['glucose_test', 'A1Ctest']
-for col in numeric_columns:
-    df[col] = pd.to_numeric(df[col], errors='coerce')
-
-df[numeric_columns] = df[numeric_columns].fillna(0)
+df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce').fillna(0)
 
 # One-Hot Encode categorical columns
 categorical_columns = ['medical_specialty', 'diag_1', 'diag_2', 'diag_3', 'change', 'diabetes_med']
@@ -49,8 +46,6 @@ model.fit(X_train, y_train)
 # Save model and scaler in the specific path
 joblib.dump(model, os.path.join(SAVE_DIR, "readmission_model.pkl"))
 joblib.dump(scaler, os.path.join(SAVE_DIR, "scaler.pkl"))
-# Save feature names used in training
-joblib.dump(features, r"C:\Users\kisho\OneDrive\Desktop\patient\feature_names.pkl")
-
+joblib.dump(features, os.path.join(SAVE_DIR, "feature_names.pkl"))
 
 print(f"Model training completed. Model and scaler saved in {SAVE_DIR}")
