@@ -3,12 +3,9 @@ import pandas as pd
 import numpy as np
 import joblib
 
-# Load the trained model and scaler
-model = joblib.load(r"C:\Users\kisho\OneDrive\Desktop\patient\readmission_model.pkl")
-scaler = joblib.load(r"C:\Users\kisho\OneDrive\Desktop\patient\scaler.pkl")
-
-# Load feature names used in training
-feature_names = joblib.load(r"C:\Users\kisho\OneDrive\Desktop\patient\feature_names.pkl")  # Save this in training script
+model = joblib.load("readmission_model.pkl")
+scaler = joblib.load("scaler.pkl")
+feature_names = joblib.load("feature_names.pkl")
 
 # Streamlit UI
 st.title("Patient Readmission Prediction")
